@@ -49,6 +49,11 @@ var vimeoGAJS = (window.vimeoGAJS) ? window.vimeoGAJS : {};
         //console.info('Google Tag Manager');
       }
 
+      if( typeof _paq != "'undefined" && typeof _paq.push === "function"){
+        vimeoGAJS.gaTracker = 'pa'; // Piwik Analytics
+        //console.info("Piwik Analytics");
+      }
+
       // Listen for messages from the player
       if (window.addEventListener) {
         window.addEventListener('message', vimeoGAJS.onMessageReceived, false);
@@ -188,17 +193,28 @@ var vimeoGAJS = (window.vimeoGAJS) ? window.vimeoGAJS : {};
       var label = vimeoGAJS.getLabel(iframeEl);
 
       switch (vimeoGAJS.gaTracker) {
-      case 'gtm':
-        dataLayer.push({'event': 'Vimeo', 'eventCategory': 'Vimeo', 'eventAction': action, 'eventLabel': label, 'eventValue': undefined, 'eventNonInteraction': (bounce) ? false : true });
-        break;
+        case 'gtm':
+          dataLayer.push({
+            'event': 'Vimeo',
+            'eventCategory': 'Vimeo',
+            'eventAction': action,
+            'eventLabel': label,
+            'eventValue': undefined,
+            'eventNonInteraction': (bounce) ? false : true
+          });
+          break;
 
-      case 'ua':
-        ga('send', 'event', 'Vimeo', action, label, undefined, {'nonInteraction': (bounce) ? 0 : 1});
-        break;
+        case 'ua':
+          ga('send', 'event', 'Vimeo', action, label, undefined, {'nonInteraction': (bounce) ? 0 : 1});
+          break;
 
-      case 'ga':
-        _gaq.push(['_trackEvent', 'Vimeo', action, label, undefined, (bounce) ? false : true]);
-        break;
+        case 'ga':
+          _gaq.push(['_trackEvent', 'Vimeo', action, label, undefined, (bounce) ? false : true]);
+          break;
+
+        case 'pa':
+          _paq.push(['trackEvent', 'Vimeo', action, label, (bounce) ? false : true]);
+          break;
       }
     }
   };
