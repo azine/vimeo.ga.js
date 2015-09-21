@@ -116,11 +116,17 @@ var vimeoGAJS = (window.vimeoGAJS) ? window.vimeoGAJS : {};
       var iframeSrc = iframeEl.attr('src').split('?')[0];
       var label = iframeSrc;
       if (iframeEl.data('title')) {
-        label += ' (' + iframeEl.data('title') + ')';
+        label = iframeEl.data('title');
       } else if (iframeEl.attr('title')) {
-        label += ' (' + iframeEl.attr('title') + ')';
+        label = iframeEl.attr('title');
       }
       return label;
+    },
+
+    getCategory : function(iframeEl) {
+      var category = iframeEl.data('category');
+      category = category !== undefined ? category : "vimeo";
+      return category;
     },
 
     // Helper function for sending a message to the player
@@ -191,12 +197,13 @@ var vimeoGAJS = (window.vimeoGAJS) ? window.vimeoGAJS : {};
     sendEvent: function (iframeEl, action) {
       var bounce = iframeEl.data('bounce');
       var label = vimeoGAJS.getLabel(iframeEl);
+      var category = vimeoGAJS.getCategory(iframeEl);
 
       switch (vimeoGAJS.gaTracker) {
         case 'gtm':
           dataLayer.push({
             'event': 'Vimeo',
-            'eventCategory': 'Vimeo',
+            'eventCategory': category,
             'eventAction': action,
             'eventLabel': label,
             'eventValue': undefined,
@@ -205,15 +212,15 @@ var vimeoGAJS = (window.vimeoGAJS) ? window.vimeoGAJS : {};
           break;
 
         case 'ua':
-          ga('send', 'event', 'Vimeo', action, label, undefined, {'nonInteraction': (bounce) ? 0 : 1});
+          ga('send', 'event', category, action, label, undefined, {'nonInteraction': (bounce) ? 0 : 1});
           break;
 
         case 'ga':
-          _gaq.push(['_trackEvent', 'Vimeo', action, label, undefined, (bounce) ? false : true]);
+          _gaq.push(['_trackEvent', category, action, label, undefined, (bounce) ? false : true]);
           break;
 
         case 'pa':
-          _paq.push(['trackEvent', 'Vimeo', action, label, (bounce) ? 0 : 1]);
+          _paq.push(['trackEvent', category, action, label, (bounce) ? 0 : 1]);
           break;
       }
     }
