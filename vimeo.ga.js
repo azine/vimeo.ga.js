@@ -34,6 +34,11 @@ var vimeoGAJS = (window.vimeoGAJS) ? window.vimeoGAJS : {};
       });
 
       // Check which version of Google Analytics is used
+      if( typeof _paq != "'undefined" && typeof _paq.push === "function"){
+        vimeoGAJS.gaTracker = 'pa'; // Piwik Analytics
+        //console.info("Piwik Analytics");
+      }
+
       if (typeof ga === "function") {
         vimeoGAJS.gaTracker = 'ua'; // Universal Analytics (universal.js)
         //console.info('Universal Analytics');
@@ -47,11 +52,6 @@ var vimeoGAJS = (window.vimeoGAJS) ? window.vimeoGAJS : {};
       if (typeof dataLayer !== "undefined" && typeof dataLayer.push === "function") {
         vimeoGAJS.gaTracker = 'gtm'; // Google Tag Manager (dataLayer)
         //console.info('Google Tag Manager');
-      }
-
-      if( typeof _paq != "'undefined" && typeof _paq.push === "function"){
-        vimeoGAJS.gaTracker = 'pa'; // Piwik Analytics
-        //console.info("Piwik Analytics");
       }
 
       // Listen for messages from the player
@@ -218,10 +218,11 @@ var vimeoGAJS = (window.vimeoGAJS) ? window.vimeoGAJS : {};
         case 'ga':
           _gaq.push(['_trackEvent', category, action, label, undefined, (bounce) ? false : true]);
           break;
+      }
 
-        case 'pa':
-          _paq.push(['trackEvent', category, action, label, (bounce) ? 0 : 1]);
-          break;
+      if(typeof window._paq !== 'undefined'){
+        _paq.push(['trackEvent', category, action, label, (bounce) ? 0 : 1]);
+
       }
     }
   };
