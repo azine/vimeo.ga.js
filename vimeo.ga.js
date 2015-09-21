@@ -213,7 +213,7 @@ var vimeoGAJS = (window.vimeoGAJS) ? window.vimeoGAJS : {};
           break;
 
         case 'pa':
-          _paq.push(['trackEvent', 'Vimeo', action, label, (bounce) ? false : true]);
+          _paq.push(['trackEvent', 'Vimeo', action, label, (bounce) ? 0 : 1]);
           break;
       }
     }
